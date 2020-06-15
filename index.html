@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mantenimiento</title>
+
+    <link type="text/css" rel="stylesheet" href="http://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="http://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+
+    <!-- Load polyfills to support older browsers -->
+    <script src="http://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"
+        crossorigin="anonymous"></script>
+
+    <!-- Load Vue followed by BootstrapVue -->
+    <script src="http://unpkg.com/vue@latest/dist/vue.min.js"></script>
+    <script src="http://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+
+    <!-- Load the following for BootstrapVueIcons support -->
+    <script src="http://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+    <script src="https://kit.fontawesome.com/8cb5e7477f.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <b-container id="app">
+        <b-row>
+            <b-col>
+                <h2>Vehículos</h2>
+                <b-button @click="cModalAgregar" variant="outline-warning"><i class="fa fa-plus" aria-hidden="true"></i>
+                    Vehículo</b-button>
+            </b-col>
+        </b-row>
+        <br>
+        <b-row>
+            <b-col>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>PLACA</th>
+                            <th>MARCA</th>
+                            <th>MODELO</th>
+                            <th>FECHA DE REGISTRO</th>
+                            <th>ACCIONES</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr v-for="(vehiculo,index) in vehiculos">
+                            <td>{{vehiculo.id}}</td>
+                            <td>{{vehiculo.placa}}</td>
+                            <td>{{vehiculo.marca}}</td>
+                            <td>{{vehiculo.modelo}}</td>
+                            <td>{{vehiculo.fecha}}</td>
+                            <td>
+                                <b-button-group>
+                                    <b-button @click="cModalEditar(vehiculo.id)" variant="outline-info"> <i class="fa fa-pencil" aria-hidden="true"></i> </b-button>
+                                    <b-button @click="vehiculos.splice(index,1)" variant="outline-danger"><i class="fa fa-trash" aria-hidden="true"></i></b-button>
+                                </b-button-group>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </b-col>
+        </b-row>
+
+        <b-modal v-model="modalVehiculo" title="Vehículo" hide-footer>
+            <b-form-input v-model="vehiPlaca" class="mb-2" :state="validVehiPlaca" placeholder="Placa"></b-form-input>
+
+            <b-form-select v-model="vehiSeMarca" class="mb-2" :state="validVehiMarca"  :options="marcas" @input="eligeVehiMarca($event)" value-field="id" text-field="descripcion">
+                <template v-slot:first>
+                    <b-form-select-option :value="null" disabled>-- Ma  rca --</b-form-select-option>
+                </template>
+            </b-form-select>
+
+            <b-form-select v-model="vehiSeModelo" class="mb-2" :state="validVehiModelo"  :options="vehiModelos" value-field="id" text-field="descripcion">
+                <template v-slot:first>
+                    <b-form-select-option :value="null" disabled>-- Modelo --</b-form-select-option>
+                </template>
+            </b-form-select>
+
+            <b-button-group>
+                <b-button v-if="showBtnVehiCancelar" variant="outline-danger" @click="cancelarVehiculo">Cancelar</b-button>
+                <b-button v-if="showBtnVehiGuardar" variant="outline-success" @click="guardarVehiculo">Guardar</b-button>
+                <b-button v-if="showBtnVehiEditar" variant="outline-success" @click="editarVehiculo">Editar</b-button>
+            </b-button-group>
+        </b-modal>
+    </b-container>
+
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
